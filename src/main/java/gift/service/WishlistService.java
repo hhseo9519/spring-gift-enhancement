@@ -51,8 +51,18 @@ public class WishlistService {
 
     }
 
+    @Transactional
     public void addToWishlist(Long memberId, Long productId) {
-        wishlistRepository.upsertWishlist(memberId, productId);
+        wishlistRepository.findByMemberIdAndProductId(memberId, productId)
+                .ifPresentOrElse(
+                        wishlist -> {
+                            wishlist.increaseQuantity();
+                        },
+                        () -> {
+                            Wishlist wishlist = new Wishlist(memberId, productId);
+                            wishlistRepository.save(wishlist);
+                        }
+                );
     }
 
 
