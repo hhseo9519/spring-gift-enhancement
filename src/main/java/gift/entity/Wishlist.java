@@ -18,9 +18,11 @@ public class Wishlist {
     private Product product;
 
     @Column(nullable = false)
+
     private int quantity;
 
     public Wishlist() {}
+
 
     // 생성자: member, product 객체 받아서 wishlist 생성
     public Wishlist(Member member, Product product) {
@@ -40,12 +42,14 @@ public class Wishlist {
         return id;
     }
 
+
     public Member getMember() {
         return member;
     }
 
     public Product getProduct() {
         return product;
+
     }
 
     public int getQuantity() {
@@ -56,7 +60,9 @@ public class Wishlist {
         this.quantity = quantity;
     }
 
+
     public void increaseQuantity() {
         this.quantity += 1;
     }
+
 }

@@ -35,10 +35,12 @@ public class WishlistService {
         return list.stream()
                 .map(Wishlist::getProduct)
                 .filter(Objects::nonNull)
+
                 .map(p -> new ProductResponseDto(
                         p.getId(),
                         p.getName(),
                         p.getPrice(),
+
                         p.getImageUrl()))
                 .toList();
     }
@@ -62,3 +64,4 @@ public class WishlistService {
                 .ifPresent(wishlistRepository::delete);
     }
 }
+

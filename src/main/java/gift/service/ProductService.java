@@ -9,6 +9,7 @@ import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @Service
 public class ProductService {
 
@@ -18,31 +19,37 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+
     private Product toEntity(ProductRequestDto dto) {
         return new Product(dto.getName(), dto.getPrice(), dto.getImageUrl());
     }
 
     private ProductResponseDto toDto(Product product) {
+
         return new ProductResponseDto(
                 product.getId(),
                 product.getName(),
                 product.getPrice(),
                 product.getImageUrl()
         );
+
     }
 
     public List<ProductResponseDto> findAllProduct() {
         return productRepository.findAll().stream()
+
                 .map(this::toDto)
                 .toList();
     }
 
     public ProductResponseDto addProduct(ProductRequestDto productRequestDto) {
+
         validateNameContent(productRequestDto.getName());
         Product product = toEntity(productRequestDto);
         Product savedProduct = productRepository.save(product);
         return toDto(savedProduct);
     }
+
 
     public ProductResponseDto findProduct(Long id) {
         Product product = productRepository.findById(id)
@@ -74,6 +81,7 @@ public class ProductService {
 
     public List<Product> findAllById(List<Long> ids) {
         return productRepository.findAllById(ids);
+
     }
 
     private void validateNameContent(String name) {
@@ -81,9 +89,11 @@ public class ProductService {
             throw new IllegalArgumentException("상품 이름은 '카카오'를 포함할 수 없습니다.");
         }
     }
+
     public Product findProductEntity(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Product not found. id=" + id));
     }
+
 
 }

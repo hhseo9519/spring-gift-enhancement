@@ -1,5 +1,6 @@
 package gift.controller;
 
+
 import gift.dto.ProductResponseDto;
 import gift.dto.WishlistProductDto;
 import gift.dto.WishlistRequestDto;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/wishlist")
 public class WishlistController {
+
     private final WishlistService wishlistService;
 
     public WishlistController(WishlistService wishlistService) {
@@ -33,6 +35,7 @@ public class WishlistController {
     public List<ProductResponseDto> getWishlist(@LoginMember Member member) {
         return wishlistService.getWishlist(member.getId());
     }
+
 
     @PostMapping
     public ResponseEntity<Void> addToWishlist(@LoginMember Member member,
@@ -48,4 +51,7 @@ public class WishlistController {
         return ResponseEntity.noContent().build();
     }
 }
+
+
+
 

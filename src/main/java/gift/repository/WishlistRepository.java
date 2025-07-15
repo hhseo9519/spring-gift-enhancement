@@ -1,5 +1,6 @@
 package gift.repository;
 
+
 import gift.entity.Member;
 import gift.entity.Product;
 import gift.entity.Wishlist;
@@ -17,3 +18,4 @@ public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
 
     void deleteByMemberAndProduct(Member member, Product product);
 }
+

@@ -1,5 +1,6 @@
 package gift.entity;
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +27,7 @@ public class Product {
     protected Product() {}
 
 
+
     public Product(Long id, String name, int price, String imageUrl) {
         this.id = id;
         this.name = name;
@@ -43,6 +45,7 @@ public class Product {
     public Long getId() {
         return id;
     }
+
 
     public String getName() {
         return name;

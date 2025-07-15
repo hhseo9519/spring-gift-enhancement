@@ -6,6 +6,7 @@ import gift.repository.ProductRepository;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -58,6 +59,7 @@ public class ProductAdminService {
                         "상품(id=" + id + ")을 찾을 수 없습니다."
                 ));
         productRepository.delete(product);
+
     }
 
     private void validateNameContent(String name) {
@@ -65,4 +67,5 @@ public class ProductAdminService {
             throw new IllegalArgumentException("‘카카오’가 포함된 문구는 담당 MD와 협의된 경우에만 사용할 수 있습니다.");
         }
     }
+
 }
