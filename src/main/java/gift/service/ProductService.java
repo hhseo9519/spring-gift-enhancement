@@ -81,4 +81,9 @@ public class ProductService {
             throw new IllegalArgumentException("상품 이름은 '카카오'를 포함할 수 없습니다.");
         }
     }
+    public Product findProductEntity(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Product not found. id=" + id));
+    }
+
 }
