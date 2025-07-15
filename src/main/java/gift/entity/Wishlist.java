@@ -1,13 +1,6 @@
 package gift.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table
@@ -17,27 +10,29 @@ public class Wishlist {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "member_id", nullable = false)
-    private Long memberId;
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "product_id", nullable = false)
-    private Long productId;
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
     @Column(nullable = false)
     private int quantity;
 
     public Wishlist() {}
 
-    public Wishlist(Long memberId, Long productId) {
-        this.memberId = memberId;
-        this.productId = productId;
+    // 생성자: member, product 객체 받아서 wishlist 생성
+    public Wishlist(Member member, Product product) {
+        this.member = member;
+        this.product = product;
         this.quantity = 1;
     }
-    public Wishlist(Long id, Long memberId, Long productId, int quantity) {
+
+    public Wishlist(Long id, Member member, Product product, int quantity) {
         this.id = id;
-        this.memberId = memberId;
-        this.productId = productId;
+        this.member = member;
+        this.product = product;
         this.quantity = quantity;
     }
 
@@ -45,12 +40,12 @@ public class Wishlist {
         return id;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
     public int getQuantity() {

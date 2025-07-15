@@ -1,5 +1,7 @@
 package gift.repository;
 
+import gift.entity.Member;
+import gift.entity.Product;
 import gift.entity.Wishlist;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -8,9 +10,10 @@ import java.util.Optional;
 
 public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
 
-    List<Wishlist> findByMemberId(Long memberId);
 
-    Optional<Wishlist> findByMemberIdAndProductId(Long memberId, Long productId);
+    List<Wishlist> findByMember(Member member);
 
-    void deleteByMemberIdAndProductId(Long memberId, Long productId);
+    Optional<Wishlist> findByMemberAndProduct(Member member, Product product);
+
+    void deleteByMemberAndProduct(Member member, Product product);
 }
