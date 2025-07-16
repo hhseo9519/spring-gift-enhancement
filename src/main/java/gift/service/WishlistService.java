@@ -1,63 +1,67 @@
 package gift.service;
 
 import gift.dto.ProductResponseDto;
+import gift.entity.Member;
 import gift.entity.Product;
 import gift.entity.Wishlist;
 import gift.repository.WishlistRepository;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class WishlistService {
+
     private final WishlistRepository wishlistRepository;
     private final ProductService productService;
+    private final MemberService memberService;
 
     public WishlistService(WishlistRepository wishlistRepository,
-            ProductService productService) {
+            ProductService productService,
+            MemberService memberService) {
         this.wishlistRepository = wishlistRepository;
         this.productService = productService;
+        this.memberService = memberService;
     }
 
     public List<ProductResponseDto> getWishlist(Long memberId) {
-
-        List<Wishlist> list = wishlistRepository.findByMemberId(memberId);
-        List<Long> productIds = list.stream()
-                .map(Wishlist::getProductId)
-                .toList();
-
-
-        List<Product> products = productService.findAllById(productIds);
-
-
-        Map<Long, Product> productMap = products.stream()
-                .collect(Collectors.toMap(Product::getId, p -> p));
+        Member member = memberService.findById(memberId);
+        List<Wishlist> list = wishlistRepository.findByMember(member);
 
         return list.stream()
-                .map(w -> productMap.get(w.getProductId()))
-                .filter(Objects::nonNull) // null 방어
+                .map(Wishlist::getProduct)
+                .filter(Objects::nonNull)
+
                 .map(p -> new ProductResponseDto(
                         p.getId(),
                         p.getName(),
                         p.getPrice(),
-                        p.getImageUrl()
-                ))
-                .toList();
 
+                        p.getImageUrl()))
+                .toList();
     }
 
     public void addToWishlist(Long memberId, Long productId) {
-        wishlistRepository.upsertWishlist(memberId, productId);
-    }
+        Member member = memberService.findById(memberId);
+        Product product = productService.findProductEntity(productId);
 
+        wishlistRepository.findByMemberAndProduct(member, product)
+                .ifPresentOrElse(
+                        Wishlist::increaseQuantity,
+                        () -> wishlistRepository.save(new Wishlist(member, product))
+                );
+    }
 
     public void removeFromWishlist(Long memberId, Long productId) {
-        wishlistRepository.findByMemberIdAndProductId(memberId, productId)
-                .ifPresent(w -> wishlistRepository.deleteByMemberIdAndProductId(memberId, productId));
+        Member member = memberService.findById(memberId);
+        Product product = productService.findProductEntity(productId);
+
+        wishlistRepository.findByMemberAndProduct(member, product)
+                .ifPresent(wishlistRepository::delete);
     }
 }
+

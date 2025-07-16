@@ -1,5 +1,7 @@
 package gift.controller;
 
+
+import gift.dto.ProductResponseDto;
 import gift.dto.WishlistProductDto;
 import gift.dto.WishlistRequestDto;
 import gift.entity.Member;
@@ -22,28 +24,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/wishlist")
 public class WishlistController {
-    private final ProductRepository productRepository;
-    private final WishlistRepository wishlistRepository;
+
     private final WishlistService wishlistService;
 
-    public WishlistController(ProductRepository productRepository,
-            WishlistRepository wishlistRepository, WishlistService wishlistService) {
-        this.productRepository = productRepository;
-        this.wishlistRepository = wishlistRepository;
+    public WishlistController(WishlistService wishlistService) {
         this.wishlistService = wishlistService;
     }
 
-
-
-    //위시리스트의 목록을 가져오기
     @GetMapping
-    public List<WishlistProductDto> getWishlist(@LoginMember Member member) {
-        return wishlistRepository.findByMemberId(member.getId()).stream()
-                .map(w -> {//dto로 가공
-                    Product product = productRepository.findById(w.getProductId());
-                    return new WishlistProductDto(product.getName(), w.getQuantity());
-                })
-                .collect(Collectors.toList());
+    public List<ProductResponseDto> getWishlist(@LoginMember Member member) {
+        return wishlistService.getWishlist(member.getId());
     }
 
 
@@ -60,6 +50,8 @@ public class WishlistController {
         wishlistService.removeFromWishlist(member.getId(), productId);
         return ResponseEntity.noContent().build();
     }
-
-
 }
+
+
+
+

@@ -6,6 +6,8 @@ import gift.repository.ProductRepository;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -21,31 +23,43 @@ public class ProductAdminService {
         return productRepository.findAll();
     }
 
-
+    @Transactional
     public Product save(ProductAdminRequestDto dto) {
         validateNameContent(dto.getName());
         Product product = dto.toEntity();
         return productRepository.save(product);
     }
 
+    @Transactional
     public void update(Long id, ProductAdminRequestDto dto) {
         validateNameContent(dto.getName());
-        Product updated = dto.toEntity();
-        productRepository.update(id, updated);
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "상품(id=" + id + ")을 찾을 수 없습니다."
+                ));
+
+        product.updateProduct(dto.getName(), dto.getPrice(), dto.getImageUrl());
     }
 
     public Product findById(Long id) {
-        Product product = productRepository.findById(id);
-        if (product == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "상품(id=" + id + ")을 찾을 수 없습니다."
-            );
-        }
-        return product;
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "상품(id=" + id + ")을 찾을 수 없습니다."
+                ));
     }
 
+    @Transactional
     public void deleteProductById(Long id) {
-        productRepository.deleteById(id);
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "상품(id=" + id + ")을 찾을 수 없습니다."
+                ));
+        productRepository.delete(product);
+
     }
 
     private void validateNameContent(String name) {
