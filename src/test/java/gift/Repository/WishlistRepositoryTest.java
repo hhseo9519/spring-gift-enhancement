@@ -7,6 +7,7 @@ import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishlistRepository;
 import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,17 +33,19 @@ class WishlistRepositoryTest {
     @Autowired
     private EntityManager em;
 
+    private Member savedMember;
+    private Product savedProduct;
+
+    @BeforeEach
+    void setup() {
+        savedMember = members.save(new Member("test@example.com", "1234"));
+        savedProduct = products.save(new Product("초콜릿", 1000, "img"));
+    }
+
     @Test
     void 저장기능테스트() {
-
-        Member member = members.save(new Member("test@example.com", "1234"));
-        Product product = products.save(new Product("초콜릿", 1000, "img"));
-
-        Wishlist expected = new Wishlist(member, product);
-
-
+        Wishlist expected = new Wishlist(savedMember, savedProduct);
         Wishlist actual = wishlists.save(expected);
-
 
         assertAll(
                 () -> assertThat(actual.getId()).isNotNull(),
@@ -54,18 +57,15 @@ class WishlistRepositoryTest {
 
     @Test
     void 멤버로위시리스트조회하기() {
-
-        Member member = members.save(new Member("test@example.com", "1234"));
-        Product product = products.save(new Product("사탕", 2000, "url"));
-
-        Wishlist wishlist = new Wishlist(member, product);
+        Wishlist wishlist = new Wishlist(savedMember, savedProduct);
         wishlists.save(wishlist);
 
         em.flush();
         em.clear();
-        List<Wishlist> result = wishlists.findByMember(member);
+
+        List<Wishlist> result = wishlists.findByMember(savedMember);
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getProduct().getName()).isEqualTo("사탕");
+        assertThat(result.get(0).getProduct().getName()).isEqualTo("초콜릿");
     }
 }
