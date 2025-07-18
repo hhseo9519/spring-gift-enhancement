@@ -7,3 +7,4 @@ public record WishlistProductDto(
         String imageUrl,
         int quantity
 ) {}
+

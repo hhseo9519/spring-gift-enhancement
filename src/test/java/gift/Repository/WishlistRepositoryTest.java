@@ -8,6 +8,7 @@ import gift.repository.ProductRepository;
 import gift.repository.WishlistRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,7 @@ class WishlistRepositoryTest {
         Wishlist expected = new Wishlist(savedMember, savedProduct);
         Wishlist actual = wishlists.save(expected);
 
+
         assertAll(
                 () -> assertThat(actual.getId()).isNotNull(),
                 () -> assertThat(actual.getMember().getEmail()).isEqualTo("test@example.com"),
@@ -58,6 +60,7 @@ class WishlistRepositoryTest {
     @Test
     void 멤버로위시리스트조회하기() {
         Wishlist wishlist = new Wishlist(savedMember, savedProduct);
+
         wishlists.save(wishlist);
 
         em.flush();
@@ -67,5 +70,6 @@ class WishlistRepositoryTest {
 
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getProduct().getName()).isEqualTo("초콜릿");
+
     }
 }

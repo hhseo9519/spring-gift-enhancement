@@ -2,6 +2,7 @@ package gift.service;
 
 import gift.dto.ProductResponseDto;
 import gift.dto.WishlistProductDto;
+
 import gift.entity.Member;
 import gift.entity.Product;
 import gift.entity.Wishlist;
@@ -12,6 +13,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +32,7 @@ public class WishlistService {
         this.productService = productService;
         this.memberService = memberService;
     }
+
     public Page<WishlistProductDto> getWishlist(Long memberId, Pageable pageable) {
         Member member = memberService.findById(memberId);
         Page<Wishlist> wishlistPage = wishlistRepository.findByMember(member, pageable);
@@ -46,6 +49,7 @@ public class WishlistService {
             );
         }).map(Objects::requireNonNull);
     }
+
 
 
     public void addToWishlist(Long memberId, Long productId) {
