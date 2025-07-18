@@ -6,6 +6,8 @@ import gift.entity.Product;
 import gift.repository.ProductRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,12 +37,13 @@ public class ProductService {
 
     }
 
-    public List<ProductResponseDto> findAllProduct() {
-        return productRepository.findAll().stream()
 
-                .map(this::toDto)
-                .toList();
+
+    public Page<ProductResponseDto> findAllProduct(Pageable pageable) {
+        return productRepository.findAll(pageable)
+                .map(this::toDto);
     }
+
 
     public ProductResponseDto addProduct(ProductRequestDto productRequestDto) {
 
