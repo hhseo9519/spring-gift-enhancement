@@ -1,3 +1,10 @@
 package gift.dto;
 
-public record WishlistProductDto(String name, int quantity) {}
+public record WishlistProductDto(
+        Long id,
+        String name,
+        int price,
+        String imageUrl,
+        int quantity
+) {}
+
