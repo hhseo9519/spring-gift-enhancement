@@ -85,4 +85,7 @@ public class Option {
     public int hashCode() {
         return getClass().hashCode();
     }
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 }
