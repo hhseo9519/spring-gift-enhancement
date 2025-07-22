@@ -1,6 +1,8 @@
 package gift.dto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
+import java.util.List;
 
 
 public class ProductRequestDto {
@@ -13,22 +15,22 @@ public class ProductRequestDto {
     )
     private String name;
 
-
     @Min(value = 0, message = "상품 가격은 0원 이상이어야 합니다.")
     private int price;
 
     @NotBlank(message = "이미지 URL은 비어 있을 수 없습니다.")
     private String imageUrl;
 
-    public ProductRequestDto() {
-    }
+    @NotEmpty(message = "옵션은 하나 이상 등록해야 합니다.")
+    private List<@Valid OptionRequestDto> options;
 
+    public ProductRequestDto() {}
 
-
-    public ProductRequestDto(String name, int price, String imageUrl) {
+    public ProductRequestDto(String name, int price, String imageUrl, List<OptionRequestDto> options) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.options = options;
     }
 
     public String getName() {
@@ -43,4 +45,8 @@ public class ProductRequestDto {
         return imageUrl;
     }
 
+    public List<OptionRequestDto> getOptions() {
+        return options;
+    }
 }
+

@@ -2,6 +2,7 @@ package gift.service;
 
 import gift.dto.ProductRequestDto;
 import gift.dto.ProductResponseDto;
+import gift.entity.Option;
 import gift.entity.Product;
 import gift.repository.ProductRepository;
 import java.util.List;
@@ -47,15 +48,21 @@ public class ProductService {
     }
 
 
-
+    @Transactional
     public ProductResponseDto addProduct(ProductRequestDto productRequestDto) {
-
         validateNameContent(productRequestDto.getName());
-        Product product = toEntity(productRequestDto);
+
+        Product product = new Product(
+                productRequestDto.getName(),
+                productRequestDto.getPrice(),
+                productRequestDto.getImageUrl()
+        );
+        productRequestDto.getOptions().forEach(optionDto -> {
+            product.addOption(new Option(null, optionDto.name(), optionDto.quantity()));
+        });
         Product savedProduct = productRepository.save(product);
         return toDto(savedProduct);
     }
-
 
     public ProductResponseDto findProduct(Long id) {
         Product product = productRepository.findById(id)
