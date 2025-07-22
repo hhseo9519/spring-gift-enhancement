@@ -88,4 +88,13 @@ public class Option {
     public void setProduct(Product product) {
         this.product = product;
     }
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Option(String name, int quantity) {
+        this.name = name;
+        this.quantity = quantity;
+    }
+
 }
